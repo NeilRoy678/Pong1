@@ -18,6 +18,7 @@ class Player():
 		pygame.display.set_caption("P0NG")
 		#self.ball = pygame.Rect(self.screen_width/2 - 15, self.screen_height/2 - 15, 30, 30)
 		self.player1 = pygame.Rect(self.width, self.height, 10, 140)
+
 		self.bg_color = (0, 0, 0)
 		self.white = (255, 255, 255)
 		self.ball_speed_x = 6
@@ -33,10 +34,10 @@ class Player():
 		return(self.player1.top,self.player1.bottom)
 	
 	def draw1(self):
-		self.screen.fill(self.bg_color)
+		#self.screen.fill(self.bg_color)
 		#self.opponent.screen.fill(self.player.bg_color)
 		pygame.draw.rect(self.screen, self.white,self.player1)
-
+	
 
 class pong:
 	def __init__(self):
@@ -53,7 +54,7 @@ class pong:
 	def opp(self):
 		clock = pygame.time.Clock()
 		self.net = Network()
-		x,y = self.read_pos(self.net.getPos())
+		data = self.read_pos(self.net.getPos()) 
 		self.player = Player(335,475,1510,335)
 		self.opponent = Player(335,480,10,335)
 		while True:
@@ -74,21 +75,23 @@ class pong:
 							self.player_speed += 7  
 			self.x,self.y = self.player.player_animation(self.player_speed)
 			n,e = self.read_pos(self.net.send(self.make_pos(self.x,self.y)))
+			#print(self.opponent.player1.top,self.opponent.player1.bottom)
 			print(n,e)
-			self.opponent.top = n
-			self.opponent.bottom = e
-
+			self.opponent.player1.top = int(n)
+			self.opponent.player1.bottom = int(e)
+			#self.opponent.player_animation(self.player_speed)
 			#self.x,self.y = self.player.player_animation(self.player_speed,self.y,self.top,self.bottom)
 			self.player.screen.fill(self.player.bg_color)
-			self.opponent.screen.fill(self.player.bg_color)
+			self.opponent.screen.fill(self.opponent.bg_color)
 			self.player.draw1()
+		
 			self.opponent.draw1()
-		#	self.opponent.top, self.opponent.bottom = self.read_pos(self.make_pos(n,e))
 			
+			pygame.display.flip()
 			#self.opponent = Player(n,e)
 			#client.sendall(str.encode("\n".join([str(player.top), str(player.bottom)])))
 			#n, e = [int(i) for i in client.recv(2048).decode('utf-8').split('\n')]
-			pygame.display.flip()
+			
 	
 
 	
